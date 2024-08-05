@@ -1,8 +1,9 @@
 import { Router } from 'express'
-import { index } from '../controllers/user.controller.js'
+import { find, index } from '../controllers/user.controller.js'
 
 const router = Router()
 
 router.get('/', index)
+router.get('/:id', find)
 
 export default router
