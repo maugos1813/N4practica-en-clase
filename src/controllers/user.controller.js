@@ -68,6 +68,10 @@ export const verificarToken = async (req, res) => {
     console.log(decoded)
     console.log(decoded.usuarioId)
   } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(400).json({ message: 'Token expirado' })
+    }
+
     res.status(500).json({ message: error.message })
   }
 }
