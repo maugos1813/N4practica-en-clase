@@ -11,9 +11,26 @@ class User {
     return usuario[0]
   }
 
-  static async store () {
-    const usuarios = await pool.execute('SELECT * FROM users')
-    return usuarios[0]
+  static async create ({ fName, mName, lName, username, email, password }) {
+    const campos = ['f_name', 'username', 'email', 'password']
+    const values = [fName, username, email, password]
+
+    if (mName) {
+      campos.push('m_name')
+      values.push(mName)
+    }
+
+    if (lName) {
+      campos.push('l_name')
+      values.push(lName)
+    }
+
+    const camposString = campos.join(', ')
+    const placeholders = values.map(() => '?').join(', ')
+
+    const nuevoUsuario = await pool.execute(`INSERT INTO users(${camposString}) VALUES (${placeholders})`, values)
+
+    return nuevoUsuario
   }
 }
 
