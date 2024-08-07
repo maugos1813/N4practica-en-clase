@@ -1,10 +1,12 @@
 import { Router } from 'express'
-import { find, index, store } from '../controllers/user.controller.js'
+import { crearToken, find, index, store, verificarToken } from '../controllers/user.controller.js'
 
 const router = Router()
 
 router.get('/', index)
-router.get('/:id', find)
 router.post('/', store)
+router.post('/crear-token', crearToken)
+router.get('/verificar-token', verificarToken)
+router.get('/:id', find)
 
 export default router

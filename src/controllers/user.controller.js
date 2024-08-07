@@ -1,4 +1,6 @@
+import { SECRET_KEY } from '../config/config.js'
 import User from '../models/User.js'
+import jwt from 'jsonwebtoken'
 
 export const index = async (req, res) => {
   try {
@@ -41,6 +43,30 @@ export const store = async (req, res) => {
     if (nuevoUsuario[0].affectedRows === 1) return res.json({ message: 'Usuario guardado' })
 
     res.status(500).json({ message: 'Error al guardar el usuario' })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+export const crearToken = async (req, res) => {
+  try {
+    const { username } = req.body
+    const usuario = await User.where('username', username)
+    if (usuario.length === 0) return res.status(404).json({ message: 'El usuario no existe' })
+
+    const token = jwt.sign({ usuarioId: usuario[0].user_id }, SECRET_KEY, { expiresIn: '1h' })
+    res.json({ token })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+export const verificarToken = async (req, res) => {
+  try {
+    const { authorization } = req.headers
+    const decoded = jwt.verify(authorization, SECRET_KEY)
+    console.log(decoded)
+    console.log(decoded.usuarioId)
   } catch (error) {
     res.status(500).json({ message: error.message })
   }

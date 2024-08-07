@@ -11,6 +11,11 @@ class User {
     return usuario[0]
   }
 
+  static async where (campo, valor) {
+    const usuario = await pool.execute(`SELECT * FROM users WHERE ${campo} = ?`, [valor])
+    return usuario[0]
+  }
+
   static async create ({ fName, mName, lName, username, email, password }) {
     const campos = ['f_name', 'username', 'email', 'password']
     const values = [fName, username, email, password]
